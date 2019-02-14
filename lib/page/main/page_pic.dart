@@ -64,9 +64,9 @@ class _PicPageState extends State<PicPage> {
     //在build中update UI
     return Scaffold(
         appBar: AppBar(title: Text("煎蛋 无聊图")),
-        body: _isLoaded ? RefreshIndicator(
-            child: _bindListUi(context),
-            onRefresh: _onPullDown)
+        body: _isLoaded
+            ? RefreshIndicator(
+                child: _bindListUi(context), onRefresh: _onPullDown)
             : Center(child: Text("加载中")));
   }
 
@@ -124,56 +124,105 @@ class PicItemAdapter {
         DateTime.tryParse(data.comment_date) ?? DateTime.now(),
         locale: 'zh');
 
-    return Card(
-        child: Padding(
-            padding: EdgeInsets.fromLTRB(4, 16, 4, 16),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    var offstage = (null==data.text_content||data.text_content.isEmpty);
+    print(">>>offstage:${offstage}:content:${data.text_content}");
+    return Container(
+        margin: EdgeInsets.all(6),
+        child: Card(
+            child: Padding(
+                padding: EdgeInsets.fromLTRB(6, 16, 6, 16),
+                child: Column(
                   children: <Widget>[
-                    Text(data.comment_author),
-                    Text(timeline),
-                  ],
-                ),
-                Container(
-                    margin: EdgeInsets.only(top: 8),
-                    child: Text(data.text_content, textAlign: TextAlign.left,)),
-
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                      //边框弧度
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(
-                        //边框颜色
-                        color: Colors.grey,
-                        //边框粗细
-                        width: 0.15,
-                      )),
-                  child: ListView.builder(
-                      // 防止viewport错误找不到高度抛出异常
-                      shrinkWrap: true,
-                      // 禁止嵌套滚动
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: null == data.pics ? 0 : data.pics.length,
-                      itemBuilder: (context, picIndex) {
-                        return FadeInImage.memoryNetwork(
-                            placeholder: kTransparentImage,
-                            image: data.pics[0] ?? "");
-                      }),
-                ),
-                Container(
-                    margin: EdgeInsets.only(top: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
-                        Text("OO [${data.vote_positive}]"),
-                        Text("XX [${data.vote_negative}]"),
-                        Text("吐槽 [${data.vote_negative}]"),
-                        Icon(Icons.share, size: 16)
+                        Text(data.comment_author,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                                decoration: TextDecoration.underline,
+                                decorationStyle: TextDecorationStyle.solid,
+                                fontWeight: FontWeight.bold)),
+                        Text("@${timeline}",
+                            style: TextStyle(
+                              color: Colors.blueGrey,
+                            )),
                       ],
-                    ))
-              ],
-            )));
+                    ),
+//                    Divider(height: 1,color: Colors.black),
+
+                    Offstage(
+                      offstage: offstage,
+                      child: Container(
+                          alignment: Alignment.centerLeft,
+//                          margin: EdgeInsets.only(top: 8),
+                          child: Text(
+                            data.text_content,
+                            style: TextStyle(fontSize: 16),
+                            textAlign: TextAlign.start,
+                          )),
+                    ),
+//                    Divider(height: 1,color: Colors.red),
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: Container(
+                          foregroundDecoration: BoxDecoration(
+                              //边框弧度
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                //边框颜色
+                                color: Colors.blueGrey,
+                                //边框粗细
+                                width: 1,
+                              )),
+                          child: ListView.builder(
+                              // 防止viewport错误找不到高度抛出异常
+                              shrinkWrap: true,
+                              // 禁止嵌套滚动
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount:
+                                  null == data.pics ? 0 : data.pics.length,
+                              itemBuilder: (context, picIndex) {
+                                return FadeInImage.memoryNetwork(
+                                    placeholder: kTransparentImage,
+                                    image: data.pics[picIndex] ?? "");
+                              }),
+                        )),
+                    Container(
+                        margin: EdgeInsets.only(top: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Text.rich(TextSpan(
+                                text: 'OO',
+                                style: new TextStyle(
+                                  color: Colors.red,
+                                ),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: "[${data.vote_positive}]",
+                                      style: new TextStyle(
+                                        color: Colors.black,
+                                      ))
+                                ])),
+                            Text.rich(TextSpan(
+                                text: 'XX',
+                                style: new TextStyle(
+                                  color: Colors.lightBlue,
+                                ),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                      text: "[${data.vote_negative}]",
+                                      style: new TextStyle(
+                                        color: Colors.black,
+                                      ))
+                                ])),
+                            Text("吐槽[${data.vote_negative}]"),
+                            Icon(Icons.share, size: 16)
+                          ],
+                        ))
+                  ],
+                ))));
   }
 }
