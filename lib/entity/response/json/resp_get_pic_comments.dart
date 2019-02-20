@@ -1,4 +1,4 @@
-import 'package:flutter_jiandan/entity/response/json/comments.dart';
+import 'package:flutter_jiandan/entity/response/json/comment.dart';
 
 class RespGetPicComments {
 

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
 final dio = Dio(BaseOptions(
-    baseUrl: 'https://i.jandan.net/',
+//    baseUrl: 'https://i.jandan.net/',
     connectTimeout: 10000,
     receiveTimeout: 10000,
     headers: {

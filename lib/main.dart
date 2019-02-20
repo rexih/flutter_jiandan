@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_jiandan/page/init/page_home.dart';
 import 'package:flutter_jiandan/page/main/page_pic.dart';
 
 void main() => runApp(MyApp());
@@ -7,6 +9,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+//    debugPaintSizeEnabled = true;
     return MaterialApp(
       title: '煎蛋flutter',
       theme: ThemeData(
@@ -19,10 +22,24 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+//        primarySwatch: Colors.blue,
+        primarySwatch: MaterialColor(0xFFFFE57B, <int, Color>{
+          50: Color(0xFFFFFDE7),
+          100: Color(0xFFFFF9C4),
+          200: Color(0xFFFFF59D),
+          300: Color(0xFFFFF176),
+          400: Color(0xFFFFEE58),
+          500: Color(0xFFFFE57B),
+          600: Color(0xFFFDD835),
+          700: Color(0xFFFBC02D),
+          800: Color(0xFFF9A825),
+          900: Color(0xFFF57F17),
+        }),
+
       ),
 //      home: MyHomePage(title: 'Flutter Demo Home Page'),
-      home: PicPage(),
+//      home: PicPage(),
+      home: HomePage(),
     );
   }
 }
